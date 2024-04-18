@@ -23,5 +23,19 @@ services:
      - '3000:3000'
     #volumes:
     #  - grafana-storage:/var/lib/grafana
-#volumes:
+  node-exporter-config:
+    image: alpine
+    volumes:
+      - textfile_collector:/textfile_collector
+    command: sh -c 'echo -e "machine_role{role=\"postfix\"} 1\nmachine_role{role=\"apache\"} 1" > textfile_collector/roles.prom'
+  node_exporter:
+    depends_on: [node-exporter-config]
+    image: prom/node-exporter
+    command: ["--collector.textfile.directory", "textfile_collector"]
+    ports:
+      - "9100:9100"
+    volumes:
+      - textfile_collector:/textfile_collector
+volumes:
+  textfile_collector: {}
   #grafana-storage: {}

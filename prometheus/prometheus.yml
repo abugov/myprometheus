@@ -6,3 +6,4 @@ scrape_configs:
       - targets:
         - "application1:8080"
         - "application2:8080"
+        - "node_exporter:9100"
